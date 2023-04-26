@@ -40,18 +40,19 @@ using namespace std;
 using namespace tinyxml2;
 
 
-BuildingInfo FindBuildingCoordinates(vector<BuildingInfo>& Buildings, string buildingName){
+BuildingInfo* FindBuildingCoordinates(vector<BuildingInfo>& Buildings, string buildingName){
   for (int i = 0; i < Buildings.size(); i++){
     if (Buildings.at(i).Abbrev == buildingName){
-      return Buildings.at(i);
+      return &Buildings.at(i);
     }
   }
 
   for (int i = 0; i < Buildings.size(); i++){
     if (int(Buildings.at(i).Fullname.find(buildingName)) >= 0){
-      return Buildings.at(i);
+      return &Buildings.at(i);
     }
   }
+  return nullptr;
 }
 
 void application(
