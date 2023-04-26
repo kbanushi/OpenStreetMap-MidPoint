@@ -147,18 +147,18 @@ int main() {
     for (int j = 0; j < Footways.at(i).Nodes.size() - 1; j++){
       Coordinates firstCoord = Nodes[Footways.at(i).Nodes.at(j)];
       Coordinates secondCoord = Nodes[Footways.at(i).Nodes.at(j + 1)];
-      double distance = distBetween2Points(firstCoord.Lat, firstCoord.Lon, secondCoord.Lat, secondCoord.Lon);
+      distance = distBetween2Points(firstCoord.Lat, firstCoord.Lon, secondCoord.Lat, secondCoord.Lon);
       G.addEdge(firstCoord.ID, secondCoord.ID, distance);
+      G.addEdge(secondCoord.ID, firstCoord.ID, distance);
     }
   }
 
-
-  // cout << "# of vertices: " << G.NumVertices() << endl;
-  // cout << "# of edges: " << G.NumEdges() << endl;
+  cout << "# of vertices: " << G.NumVertices() << endl;
+  cout << "# of edges: " << G.NumEdges() << endl;
   cout << endl;
 
   // Execute Application
-  application(Nodes, Footways, Buildings, G);
+  //application(Nodes, Footways, Buildings, G);
 
   //
   // done:
