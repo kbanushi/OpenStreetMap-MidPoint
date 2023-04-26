@@ -36,17 +36,28 @@
 #include "graph.h"
 #include "osm.h"
 
-
 using namespace std;
 using namespace tinyxml2;
 
-//
-// Implement your standard application here
-//
+
+BuildingInfo FindBuildingCoordinates(vector<BuildingInfo>& Buildings, string buildingName){
+  for (int i = 0; i < Buildings.size(); i++){
+    if (Buildings.at(i).Abbrev == buildingName){
+      return Buildings.at(i);
+    }
+  }
+
+  for (int i = 0; i < Buildings.size(); i++){
+    if (int(Buildings.at(i).Fullname.find(buildingName)) >= 0){
+      return Buildings.at(i);
+    }
+  }
+}
+
 void application(
     map<long long, Coordinates>& Nodes, vector<FootwayInfo>& Footways,
     vector<BuildingInfo>& Buildings, graph<long long, double>& G) {
-  string person1Building, person2Building;
+    string person1Building, person2Building;
 
   cout << endl;
   cout << "Enter person 1's building (partial name or abbreviation), or #> ";
