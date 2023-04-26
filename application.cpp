@@ -138,9 +138,19 @@ int main() {
   cout << "# of buildings: " << Buildings.size() << endl;
 
 
-  //
-  // TO DO: build the graph, output stats:
-  //
+  for (auto& i : Nodes){
+    G.addVertex(i.first);
+  }
+
+  double distance;
+  for (int i = 0; i < Footways.size(); i++){
+    for (int j = 0; j < Footways.at(i).Nodes.size() - 1; j++){
+      Coordinates firstCoord = Nodes[Footways.at(i).Nodes.at(j)];
+      Coordinates secondCoord = Nodes[Footways.at(i).Nodes.at(j + 1)];
+      double distance = distBetween2Points(firstCoord.Lat, firstCoord.Lon, secondCoord.Lat, secondCoord.Lon);
+      G.addEdge(firstCoord.ID, secondCoord.ID, distance);
+    }
+  }
 
 
   // cout << "# of vertices: " << G.NumVertices() << endl;
