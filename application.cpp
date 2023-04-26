@@ -59,6 +59,7 @@ void application(
     map<long long, Coordinates>& Nodes, vector<FootwayInfo>& Footways,
     vector<BuildingInfo>& Buildings, graph<long long, double>& G) {
     string person1Building, person2Building;
+    BuildingInfo* building1,* building2;
 
   cout << endl;
   cout << "Enter person 1's building (partial name or abbreviation), or #> ";
@@ -68,6 +69,15 @@ void application(
     cout << "Enter person 2's building (partial name or abbreviation)> ";
     getline(cin, person2Building);
 
+    building1 = FindBuildingCoordinates(Buildings, person1Building);
+    building2 = FindBuildingCoordinates(Buildings, person2Building);
+
+    if (building1 == nullptr)
+      cout << "Person 1's building not found" << endl;
+    if (building2 == nullptr)
+      cout << "Person 2's building not found" << endl;
+
+    cout << building1->Fullname << " " << building2->Fullname << endl; //Seg fault if a building is not found
 
     //
     // TO DO: lookup buildings, find nearest start and dest nodes, find center
@@ -75,8 +85,8 @@ void application(
     //
 
 
-    // cout << "Person 1's building not found" << endl;
-    // cout << "Person 2's building not found" << endl;
+    
+    
 
 
     //
@@ -170,7 +180,7 @@ int main() {
   cout << endl;
 
   // Execute Application
-  //application(Nodes, Footways, Buildings, G);
+  application(Nodes, Footways, Buildings, G);
 
   //
   // done:
