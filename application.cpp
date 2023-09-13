@@ -26,6 +26,7 @@
 #include <iomanip>  /*setprecision*/
 #include <string>
 #include <vector>
+#include <queue>
 #include <map>
 #include <cstdlib>
 #include <cstring>
@@ -39,8 +40,26 @@
 using namespace std;
 using namespace tinyxml2;
 
+struct NodeInfo{
+  long long prevID;
+  double dist;
+};
 
-BuildingInfo* FindBuildingCoordinates(vector<BuildingInfo>& Buildings, string buildingName){
+double Dijkstras(graph<long long, double>& G, long long start, long long end){
+  map<long long, NodeInfo> nodes;
+  priority_queue<double> pq;
+  NodeInfo info;
+  info.prevID = 0;
+  info.dist = INT_MAX;
+
+  // for (auto& node : G){ FIXME: CANNOT USE GRAPH TO TRAVERSE WITHOUT VALID
+  //   nodes[node] = info;
+  // }
+  //nodes[start] = 0;
+}
+
+
+BuildingInfo* FindBuildingInfo(vector<BuildingInfo>& Buildings, string buildingName){
   for (int i = 0; i < Buildings.size(); i++){
     if (Buildings.at(i).Abbrev == buildingName){
       return &Buildings.at(i);
@@ -55,29 +74,69 @@ BuildingInfo* FindBuildingCoordinates(vector<BuildingInfo>& Buildings, string bu
   return nullptr;
 }
 
+BuildingInfo FindClosestBuilding(vector<BuildingInfo>& Buildings, Coordinates coordinate){
+  BuildingInfo closest;
+  double minDist = numeric_limits<double>::max(), dist;
+
+  for (int i = 0; i < Buildings.size(); i++){
+    dist = distBetween2Points(coordinate.Lat, coordinate.Lon, Buildings.at(i).Coords.Lat, Buildings.at(i).Coords.Lon);
+    if (dist < minDist){
+      closest = Buildings.at(i);
+    }
+  }
+  return closest;
+}
+
+long long FindClosestNode(map<long long, Coordinates>& Nodes, Coordinates coordinate){
+  double dist, minDist = numeric_limits<double>::max();
+  long long closestID = 0;
+
+  for (auto& node : Nodes){
+    dist = distBetween2Points(coordinate.Lat, coordinate.Lon, node.second.Lat, node.second.Lon);
+    if (dist < minDist){
+      minDist = dist;
+      closestID = node.first;
+    }
+  }
+  return closestID;
+}
+
 void application(
     map<long long, Coordinates>& Nodes, vector<FootwayInfo>& Footways,
     vector<BuildingInfo>& Buildings, graph<long long, double>& G) {
+      
     string person1Building, person2Building;
-    BuildingInfo* building1,* building2;
+    BuildingInfo* building1, *building2, midBuilding;
+    Coordinates midPt;
 
-  cout << endl;
-  cout << "Enter person 1's building (partial name or abbreviation), or #> ";
-  getline(cin, person1Building);
+    cout << endl;
+    cout << "Enter person 1's building (partial name or abbreviation), or #> ";
+    getline(cin, person1Building);
 
   while (person1Building != "#") {
     cout << "Enter person 2's building (partial name or abbreviation)> ";
     getline(cin, person2Building);
 
-    building1 = FindBuildingCoordinates(Buildings, person1Building);
-    building2 = FindBuildingCoordinates(Buildings, person2Building);
+    building1 = FindBuildingInfo(Buildings, person1Building);
+    building2 = FindBuildingInfo(Buildings, person2Building);
 
-    if (building1 == nullptr)
+    if (building1 == nullptr){
       cout << "Person 1's building not found" << endl;
-    if (building2 == nullptr)
+      return;
+    }
+    if (building2 == nullptr){
       cout << "Person 2's building not found" << endl;
+      return;
+    }
 
+    //FIXME: Potentially not finding center building correctly. Middle building output is the same as "first" building
+    midPt = centerBetween2Points(building1->Coords.Lat, building1->Coords.Lon, building2->Coords.Lat, building2->Coords.Lon);
+    midBuilding = FindClosestBuilding(Buildings, midPt);
+
+    
+    
     cout << building1->Fullname << " " << building2->Fullname << endl; //Seg fault if a building is not found
+    cout << midBuilding.Fullname << endl;
 
     //
     // TO DO: lookup buildings, find nearest start and dest nodes, find center

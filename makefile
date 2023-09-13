@@ -1,9 +1,9 @@
 build:
-	rm -f application.exe
-	g++ -std=c++20 -Wall application.cpp dist.cpp osm.cpp tinyxml2.cpp -o application.exe
+	rm -f app.out
+	g++ -std=c++20 -Wall application.cpp dist.cpp osm.cpp tinyxml2.cpp -o app.out
 
 run:
-	./application.exe
+	./app.out
 
 buildtest:
 	rm -f testing.exe
